@@ -1,14 +1,79 @@
-# Store-Sales-Forecasting
+## Project Title
+**Store–Department Level Weekly Sales Forecasting**
 
-## 1. Process Pipeline
+## One-Line Business Objective
+Develop a robust, time-aware forecasting system to accurately predict weekly sales at the store–department level, enabling proactive inventory planning, labor optimization, and promotion strategy alignment.
 
-1. Data Loading into PostgreSQL
-2. Data cleaning and merging through PostgreSQL as much as possible
-3. Data Cleaning and final merge in Python through Pandas
-4. EDA performed on Python notebooks and PostgreSQL
-5. Statistical Tests performed on Python Notebooks
-6. Modeling Decisions and Statistical Modeling done in Python notebooks
-7. Deployment of necessary models if needed on AWS free tier
+---
+
+### Problem Statement
+Retail sales demand varies significantly across stores, departments, and time due to seasonality, holidays, promotions, and macroeconomic factors. Manual forecasting or naive historical averaging fails to capture these dynamics, leading to inventory imbalances, increased holding costs, stockouts, and inefficient workforce planning.
+
+The core problem addressed in this project is to **forecast weekly sales at the Store–Department level** in a way that is:
+- Time-aware and resistant to data leakage
+- Robust to holiday-driven demand spikes
+- Scalable across heterogeneous stores and departments
+- Interpretable enough to support downstream business decisions
+
+This project explicitly treats sales forecasting as a **decision-support system**, not a pure prediction exercise.
+
+---
+
+### Success Criteria
+The solution is considered successful if it meets the following criteria:
+
+- **Forecast Accuracy:**  
+  Achieves lower error than naive and baseline statistical models on unseen future weeks using time-based validation.
+
+- **Temporal Generalization:**  
+  Maintains stable performance across regular weeks and major holiday periods.
+
+- **Business Usability:**  
+  Produces forecasts at a granularity and cadence aligned with inventory, merchandising, and labor planning workflows.
+
+- **Model Reliability:**  
+  Demonstrates consistent performance across store types and departments without overfitting to high-volume entities.
+
+**Primary Evaluation Metrics:** WMAPE and RMSE (evaluated using rolling, time-aware splits)
+
+---
+
+## Project Overview
+This project focuses on **forecasting weekly retail sales** at the **Store–Department–Week** granularity using historical sales data enriched with economic, environmental, and promotional features. The objective is to design a **production-grade forecasting pipeline** that reflects real-world data engineering and data science practices.
+
+Key principles:
+- SQL-first data processing
+- Strong data integrity and reproducibility
+- Statistically grounded modeling decisions
+- Production-aware design with cloud deployment readiness
+
+---
+
+## 1. End-to-End Process Pipeline
+
+1. **Data Ingestion**
+   - Raw datasets are ingested into **PostgreSQL** to enforce schemas, constraints, and referential integrity.
+
+2. **SQL-Based Cleaning & Integration**
+   - Deduplication, joins, null handling, and preliminary transformations are performed in PostgreSQL wherever possible.
+
+3. **Python-Based Final Processing**
+   - Advanced data cleaning, feature engineering, and final dataset preparation are completed using **Pandas**.
+
+4. **Exploratory Data Analysis (EDA)**
+   - Conducted using a hybrid approach:
+     - SQL for aggregations, sanity checks, and anomaly detection
+     - Python notebooks for visualization and trend analysis
+
+5. **Statistical Analysis**
+   - Hypothesis testing and distributional analysis performed in Python notebooks to validate assumptions and guide modeling choices.
+
+6. **Modeling**
+   - Statistical and machine learning models developed in Python.
+   - Model selection driven by interpretability, robustness, and business relevance.
+
+7. **Deployment (Optional)**
+   - Selected models deployed using the **AWS Free Tier**, prioritizing cost efficiency and reproducibility.
 
 ## 2. Data Dictionary
 
