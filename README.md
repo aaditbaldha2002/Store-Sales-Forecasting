@@ -166,12 +166,43 @@ CREATE TABLE raw.train (
 ```
 </details>
 
-### Holiday Logic & Validation
-The `isholiday` feature captures four major US retail events. Verification against the US calendar confirms the flag is applied to the following reporting weeks:
+## 5. Assumptions & Constraints
 
-- **Super Bowl:** Feb 12 (2010), Feb 11 (2011), Feb 10 (2012), Feb 08 (2013)
-- **Labor Day:** Sept 10 (2010), Sept 09 (2011), Sept 07 (2012)
-- **Thanksgiving:** Nov 26 (2010), Nov 25 (2011), Nov 23 (2012)
-- **Christmas:** Dec 31 (2010), Dec 30 (2011), Dec 28 (2012)
+Senior data scientists surface constraints upfront to prevent false confidence and rework downstream.
 
-**Validation Status:** ✅ Data is chronologically consistent across all years.
+---
+
+### 5.1 Data Availability Assumptions
+- Historical data is **complete and reliable** at the Store–Department–Week level.
+- No major structural breaks (e.g., store closures, department redefinitions) during the training period.
+- External economic indicators (CPI, unemployment, fuel price) are assumed to be **lag-free and accurately reported**.
+- Holiday flags are assumed to be **correctly aligned** across datasets.
+
+---
+
+### 5.2 Latency & Cost Constraints
+- Forecasts are generated in **batch mode** (weekly cadence).
+- No real-time inference requirements.
+- Model training and inference constrained to **AWS Free Tier / local compute**.
+- Feature engineering favors **pre-computation** over on-the-fly joins to reduce runtime costs.
+
+---
+
+### 5.3 Business & Operational Constraints
+- Forecasts must be **explainable** to supply chain and operations teams.
+- Error tolerance varies by department; high-volume departments prioritized.
+- Negative sales values represent **returns**, not data errors.
+- Models must scale across **45 stores and multiple departments** without manual tuning per segment.
+
+---
+
+### 5.4 Modeling Constraints
+- No future information leakage (strict temporal integrity).
+- Models must generalize across seasonal demand shifts.
+- Preference given to models that balance:
+  - Accuracy
+  - Stability
+  - Interpretability
+  - Ease of deployment
+
+---
