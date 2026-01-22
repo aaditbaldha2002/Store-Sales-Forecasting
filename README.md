@@ -38,68 +38,67 @@ The solution is considered successful if it meets the following criteria:
 
 ---
 
-## Project Overview
-This project focuses on **forecasting weekly retail sales** at the **Store–Department–Week** granularity using historical sales data enriched with economic, environmental, and promotional features. The objective is to design a **production-grade forecasting pipeline** that reflects real-world data engineering and data science practices.
+## 3. Data Overview
 
-Key principles:
-- SQL-first data processing
-- Strong data integrity and reproducibility
-- Statistically grounded modeling decisions
-- Production-aware design with cloud deployment readiness
+### Data Sources
+The project uses structured historical retail data consisting of sales records enriched with store metadata and external economic indicators. All datasets are ingested into **PostgreSQL** to ensure schema enforcement and data integrity prior to analysis.
+
+### Time Coverage
+- **Frequency:** Weekly  
+- **Reporting Period:** Multi-year historical data  
+- **Temporal Alignment:** All datasets are aligned on the start date of the retail reporting week
+
+### Granularity
+- **Primary Granularity:** Store–Department–Week  
+- This level of detail enables:
+  - Department-specific demand modeling
+  - Cross-store comparative analysis
+  - Accurate capture of localized seasonality and holiday effects
+
+### Target Variable
+- **`weekly_sales`**
+  - Represents total weekly sales per store and department
+  - Includes negative values corresponding to product returns
+  - Modeled directly to preserve real-world business behavior
+
+### Supporting Features
+- Store-level attributes (type, size)
+- Time-varying economic and environmental indicators
+- Promotional markdown signals
+- Explicit holiday indicators validated against the US retail calendar
 
 ---
 
-## 1. End-to-End Process Pipeline
+## 4. Data Schema & Dictionary
 
-1. **Data Ingestion**
-   - Raw datasets are ingested into **PostgreSQL** to enforce schemas, constraints, and referential integrity.
+The dataset follows a **star-schema design** optimized for analytical workloads:
+- **Fact Table:** `raw.train`
+- **Dimension Tables:** `raw.stores`, `raw.features`
 
-2. **SQL-Based Cleaning & Integration**
-   - Deduplication, joins, null handling, and preliminary transformations are performed in PostgreSQL wherever possible.
+Referential joins are primarily executed on the `store` and `date` keys.
 
-3. **Python-Based Final Processing**
-   - Advanced data cleaning, feature engineering, and final dataset preparation are completed using **Pandas**.
-
-4. **Exploratory Data Analysis (EDA)**
-   - Conducted using a hybrid approach:
-     - SQL for aggregations, sanity checks, and anomaly detection
-     - Python notebooks for visualization and trend analysis
-
-5. **Statistical Analysis**
-   - Hypothesis testing and distributional analysis performed in Python notebooks to validate assumptions and guide modeling choices.
-
-6. **Modeling**
-   - Statistical and machine learning models developed in Python.
-   - Model selection driven by interpretability, robustness, and business relevance.
-
-7. **Deployment (Optional)**
-   - Selected models deployed using the **AWS Free Tier**, prioritizing cost efficiency and reproducibility.
-
-## 2. Data Dictionary
+---
 
 ### Table: `raw.stores`
-**Description:** Metadata providing context for each of the 45 retail outlets. This serves as the primary **Dimension Table** for the project.
+**Description:**  
+Store dimension table providing static metadata for each of the 45 retail outlets. Used to contextualize sales behavior and segment performance.
 
-| Column | Data Type | Key | Description | Transformation/Logic |
-| :--- | :--- | :--- | :--- | :--- |
-| **store** | `INTEGER` | PK | Unique identifier for each store. | Primary Key; used for joining Sales and Features. |
-| **type** | `VARCHAR(1)` | - | Categorical label for the store (e.g., 'A', 'B', 'C').
-| **size** | `INTEGER` | - | The physical size/square footage of the store.
+| Column | Data Type | Key | Description | Transformation / Logic |
+|------|----------|-----|------------|------------------------|
+| **store** | INTEGER | PK | Unique identifier for each store | Primary join key |
+| **type** | VARCHAR(1) | – | Store classification (A/B/C) | Categorical feature |
+| **size** | INTEGER | – | Physical store size | Proxy for capacity |
 
 <details>
-<summary>📂 View SQL Schema Definition (DDL)</summary>
+<summary>📂 SQL Schema Definition (DDL)</summary>
 
-```
--- DDL for stores dimension table
+```sql
 CREATE TABLE raw.stores (
-    store INTEGER PRIMARY KEY, -- Enforces entity integrity
+    store INTEGER PRIMARY KEY,
     type  VARCHAR(1),
     size  INTEGER
-); 
+);
 ```
-
-</details>
-
 
 ### Table: `raw.features`
 **Description:** Temporal data containing environmental and economic factors that influence consumer behavior.
