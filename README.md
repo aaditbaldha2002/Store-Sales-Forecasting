@@ -206,3 +206,72 @@ Senior data scientists surface constraints upfront to prevent false confidence a
   - Ease of deployment
 
 ---
+
+## 6. Data Cleaning & Validation Strategy
+
+Data quality is treated as a **core modeling dependency**, not a preprocessing afterthought.
+
+---
+
+### 6.1 Deduplication Logic
+- Enforced primary grain:
+- Duplicate detection performed via SQL `GROUP BY` and count checks.
+- Resolution rules:
+- Exact duplicates → removed
+- Conflicting duplicates → aggregated or resolved based on business logic
+- Post-deduplication row counts validated against expectations.
+
+---
+
+### 6.2 Missing Value Handling
+
+| Feature Category | Strategy |
+|-----------------|----------|
+| Markdowns (`markdown1–5`) | Imputed as `0` (absence of promotion) |
+| CPI | Missing time range checks across stores, polynomial regression based imputation |
+| Unemployment | Missing value time range checks,regression based imputation after bucketing |
+| Weekly Sales | Imputated as `0` (absence of sales during that week) |
+
+
+> All imputations are deterministic and reproducible.
+
+---
+
+### 6.3 Outlier Treatment
+- Negative `weekly_sales` retained (represents returns).
+- Extreme values identified using:
+- IQR-based thresholds
+- Rolling z-score windows
+- Outliers:
+- Flagged for analysis
+- Capped or retained based on business interpretation
+
+---
+
+### 6.4 Validation Checks
+
+**Schema Validation**
+- Data types, nullability, and constraints enforced at ingestion.
+- Referential integrity across `stores`, `features`, and `train`.
+
+**Statistical Validation**
+- Distribution stability checks across time windows.
+- Year-over-year seasonality consistency validation.
+
+**Business Logic Validation**
+- Holiday alignment checks.
+- Store–Department coverage verification.
+- No future data leakage (strict temporal integrity).
+
+---
+
+### 6.5 Data Quality Gates
+- Missing value rate thresholds
+- Duplicate rate thresholds
+- Outlier frequency limits
+- Row-count reconciliation checks
+- Weekly gap checks
+- Store & department level record frequency checks
+
+> Datasets failing validation gates are blocked from downstream modeling.
+---
