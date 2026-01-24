@@ -275,3 +275,157 @@ Data quality is treated as a **core modeling dependency**, not a preprocessing a
 
 > Datasets failing validation gates are blocked from downstream modeling.
 ---
+
+## 7. Deployment, Monitoring & Retraining Strategy
+
+The forecasting solution is designed with **operational realism** in mind, balancing accuracy, cost efficiency, and maintainability.
+
+---
+
+### 7.1 Deployment Strategy
+- No deployment needed
+---
+
+### 7.2 Model Performance Monitoring
+- Primary evaluation metrics:
+  - Mean Absolute Error (MAE)
+  - Weighted Absolute Percentage Error (WAPE)
+- Metrics tracked at multiple aggregation levels:
+  - Store-level
+  - Department-level
+  - Enterprise-wide
+- Performance trends reviewed weekly to detect degradation.
+
+---
+
+### 7.3 Data & Concept Drift Monitoring
+- Feature distribution drift monitored using rolling statistical summaries.
+- Target drift analyzed to identify structural demand changes.
+- Holiday and promotion periods monitored separately due to known volatility.
+
+---
+
+### 7.4 Retraining Strategy
+- Scheduled retraining on a **monthly or quarterly cadence**, depending on stability.
+- Trigger-based retraining initiated when:
+  - Forecast error exceeds predefined thresholds
+  - Significant feature or target drift is detected
+- Retraining pipelines reuse validated preprocessing logic to avoid training–serving skew.
+---
+
+### 7.5 Model Governance & Reproducibility
+- Each model version is associated with:
+  - Data snapshot
+  - Feature set
+  - Hyperparameters
+- Experiments and results are fully reproducible.
+- Clear rollback mechanism to previous stable models in case of performance regression.
+
+> The objective is not just accurate forecasts, but **reliable, auditable, and maintainable forecasting systems**.
+
+## 8. Key Insights & Business Recommendations
+
+The analysis yields actionable insights that directly inform operational and strategic decision-making.
+
+---
+
+### 8.1 Demand Drivers & Seasonality
+- Sales exhibit strong **weekly and annual seasonality**, with pronounced spikes during major holidays.
+- Holiday weeks consistently outperform non-holiday periods, but variance increases significantly.
+- Certain departments demonstrate higher sensitivity to promotions and macroeconomic indicators.
+
+**Recommendation:**  
+Plan inventory buffers and staffing levels proactively around high-variance holiday periods.
+
+---
+
+### 8.2 Store & Department Heterogeneity
+- Store size and type are strongly correlated with baseline demand levels.
+- Demand patterns vary materially across departments within the same store.
+- Uniform forecasting strategies underperform compared to segmented approaches.
+
+**Recommendation:**  
+Adopt department-level forecasts rather than store-wide averages for inventory planning.
+
+---
+
+### 8.3 Promotion Effectiveness
+- Markdown features show asymmetric impact:
+  - Some promotions drive volume increases
+  - Others have diminishing or negligible returns
+- Promotional impact varies by department and time of year.
+
+**Recommendation:**  
+Reallocate promotional spend toward high-response departments and peak windows.
+
+---
+
+### 8.4 Forecast Accuracy & Business Impact
+- Forecast accuracy improves materially when:
+  - Holiday effects are modeled explicitly
+  - Lagged sales features are incorporated
+- Reduced forecast error translates into:
+  - Lower stockout risk
+  - Improved inventory turnover
+  - More predictable staffing requirements
+
+**Recommendation:**  
+Use forecasts as inputs to downstream inventory and workforce planning systems.
+
+---
+
+### 8.5 Executive Summary
+- Accurate demand forecasting enables **cost reduction, revenue protection, and operational stability**.
+- The current solution provides a reliable baseline that can be iteratively enhanced.
+- Business value increases with consistent monitoring, retraining, and stakeholder adoption.
+
+> Forecasts are most valuable when treated as **decision-support systems**, not static predictions.
+
+## 9. Future Development: Risk-Aware Demand Segmentation
+
+Future iterations of this project will extend beyond point forecasting to incorporate **risk-based demand segmentation** at the Store–Department level.
+
+---
+
+### 9.1 Store–Department Bifurcation Strategy
+- Store–Department pairs will be segmented based on:
+  - **Weekly holiday sales uplift**
+  - **Historical sales volatility**
+- Holiday-driven performance will be used to distinguish:
+  - Holiday-sensitive segments
+  - Holiday-resilient segments
+  - Low-impact segments
+
+This bifurcation enables differentiated forecasting, inventory buffering, and operational planning strategies.
+
+---
+
+### 9.2 Risk Categorization Framework
+Each Store–Department segment will be assigned a **risk category** using a composite score derived from:
+
+- **Historical weekly sales behavior**
+  - Mean demand
+  - Variance and downside risk
+- **Macroeconomic sensitivity**
+  - Unemployment rate correlation with sales
+- **Holiday dependency**
+  - Sales concentration during holiday periods
+
+Proposed risk categories:
+- **Low Risk:** Stable demand, low macro sensitivity
+- **Medium Risk:** Moderate volatility, partial holiday dependence
+- **High Risk:** High volatility, strong unemployment and holiday sensitivity
+
+---
+
+### 9.3 Business Applications
+- Inventory buffers calibrated by risk category
+- Staffing and logistics planning adjusted for demand uncertainty
+- Prioritization of monitoring and retraining for high-risk segments
+
+---
+
+### 9.4 Analytical Value
+This extension reframes forecasting from a pure prediction task into a **decision-support and risk management system**, enabling more resilient retail operations under economic uncertainty.
+
+> The objective is not only to forecast demand, but to **understand and manage demand risk**.
