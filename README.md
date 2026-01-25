@@ -99,6 +99,7 @@ CREATE TABLE raw.stores (
     size  INTEGER
 );
 ```
+</details>
 
 ### Table: `raw.features`
 **Description:** Temporal data containing environmental and economic factors that influence consumer behavior.
