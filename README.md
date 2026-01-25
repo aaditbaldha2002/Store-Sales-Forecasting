@@ -117,7 +117,7 @@ CREATE TABLE raw.stores (
 <details>
 <summary>📂 View SQL Schema Definition (DDL)</summary>
 
-```
+```sql
 -- DDL for features dimension table
 CREATE TABLE raw.features (
     store        INTEGER,
@@ -154,7 +154,7 @@ CREATE TABLE raw.features (
 <details> 
     <summary>📂 View SQL Schema Definition (DDL)</summary>
 
-```
+```sqk
 -- DDL for sales fact table
 CREATE TABLE raw.train (
     store        INTEGER, 
